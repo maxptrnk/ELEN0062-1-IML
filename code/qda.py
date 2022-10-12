@@ -43,6 +43,9 @@ class QuadraticDiscriminantAnalysis(BaseEstimator, ClassifierMixin):
 
         self.lda = lda
 
+
+        print("Frist step done")
+
         # ====================
         # TODO your code here.
         # ====================
@@ -94,9 +97,40 @@ class QuadraticDiscriminantAnalysis(BaseEstimator, ClassifierMixin):
 
         pass
 
+
 if __name__ == "__main__":
-    from data import make_data
+    #from data import make_data
+    from data import make_dataset1
     from plot import plot_boundary
+
+    # generate dataset
+    features, labels = make_dataset1(1500,None)
+
+    #Training
+    trainingfeatures = features[300:]
+    trainingsamples = labels[300:]
+    # print(trainingfeatures.shape, trainingsamples.shape)
+    trainingset = trainingfeatures,trainingsamples
+
+    # print(trainingset)
+
+    
+
+    #Testing
+    testingfeatures = features[:300]
+    testingsamples = labels[:300]
+
+    # print(trainingfeatures, trainingsamples)
+    # print(trainingfeatures.shape, trainingsamples.shape)
+
+    # print(testingfeatures, testingsamples)
+    # print(testingfeatures.shape, testingsamples.shape)
+
+    clf = QuadraticDiscriminantAnalysis()
+    clf.fit(X=trainingfeatures, y=trainingsamples)
+    #what/where are the targets ??
+
+    #plot_boundary("plot_qda",fitted_estimator, X, y, mesh_step_size=0.1, title="plot_qda")
 
 
     

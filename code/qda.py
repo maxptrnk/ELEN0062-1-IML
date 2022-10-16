@@ -7,13 +7,13 @@ Project 1 - Classification algorithms
 # -*- coding: utf-8 -*-
 
 import numpy as np
+#from code.plot import plot_with_colors
 
 from sklearn.base import BaseEstimator, ClassifierMixin
 
 
 
 class QuadraticDiscriminantAnalysis(BaseEstimator, ClassifierMixin):
-
 
     def fit(self, X, y, lda=False):
         """Fit a linear discriminant analysis model using the training set
@@ -26,6 +26,7 @@ class QuadraticDiscriminantAnalysis(BaseEstimator, ClassifierMixin):
 
         y : array-like, shape = [n_samples]
             The target values.
+
 
         Returns
         -------
@@ -43,14 +44,25 @@ class QuadraticDiscriminantAnalysis(BaseEstimator, ClassifierMixin):
 
         self.lda = lda
 
-
-        print("Frist step done")
-
         # ====================
-        # TODO your code here.
-        # ====================
+        self.priors = dict()
+        self.means = dict()
+        self.covs = dict()
+        self.classes = np.unique(y) #[0. 1.]
+
+        for c in self.classes: # pour chaque classe
+            X_c = X[y == c]
+            self.priors[c] = X_c.shape[0] / X.shape[0] # on calcule de la prior des 2 classes : prob de la class sur le dataset
+            self.means[c] = np.mean(X_c, axis=0) # moyen des 2 classes
+
+            if lda:
+                self.covs[c] = np.cov(X, rowvar=False) # matrice de covariance du dataset
+            else:
+                self.covs[c] = np.cov(X_c, rowvar=False) # matrice de covariance des 2 classes
 
         return self
+        # ====================
+
 
     def predict(self, X):
         """Predict class for X.
@@ -67,13 +79,10 @@ class QuadraticDiscriminantAnalysis(BaseEstimator, ClassifierMixin):
         """
 
         # ====================
-        # TODO your code here.
+        return self.predict_proba(X).argmax(axis=1)
         # ====================
 
-        # return y
-
-        pass
-
+   
     def predict_proba(self, X):
         """Return probability estimates for the test data X.
 
@@ -87,50 +96,76 @@ class QuadraticDiscriminantAnalysis(BaseEstimator, ClassifierMixin):
         p : array of shape = [n_samples, n_classes]
             The class probabilities of the input samples. Classes are ordered
             by lexicographic order.
+
         """
 
         # ====================
-        # TODO your code here.
+        prob_X = []
+
+        for x in X:
+            prob_x = []
+            for c in self.classes:
+                numerator = self.f(x, self.means[c], self.covs[c]) * self.priors[c]
+                denominator = 0
+                for c2 in self.classes:
+                    denominator += self.f(x, self.means[c2], self.covs[c2]) * self.priors[c2]
+                prob_x.append(round (numerator / denominator,3))
+            prob_X.append(prob_x)
+
+        return np.array(prob_X)
         # ====================
 
-        # return p
+    def f(self, x, μ, Σ):
+            """
+            The density function of multivariate normal distribution.
 
-        pass
+            Parameters
+            ---------------
+            x: ndarray(float, dim=2)
+                random vector, N by 1
+            μ: ndarray(float, dim=1 or 2)
+                the mean of x, N by 1
+            Σ: ndarray(float, dim=2)
+                the covarianece matrix of x, N by 1
+            """
+
+            N = x.size
+
+            temp1 = np.linalg.det(Σ) ** (-1/2)
+            temp2 = np.exp(-.5 * (x - μ).T @ np.linalg.inv(Σ) @ (x - μ))
+
+            return ( 1/( ((2 * np.pi) ** (N/2)) * temp1) ) * temp2
+
 
 
 if __name__ == "__main__":
     #from data import make_data
-    from data import make_dataset1
     from plot import plot_boundary
+    from data import make_dataset1
 
     # generate dataset
     features, labels = make_dataset1(1500,None)
-
-    #Training
     trainingfeatures = features[300:]
-    trainingsamples = labels[300:]
-    # print(trainingfeatures.shape, trainingsamples.shape)
-    trainingset = trainingfeatures,trainingsamples
+    trainingtragets = labels[300:]
+    testingfeatures = features[:300]
+    testingtargets = labels[:300]
 
-    # print(trainingset)
+    print("QDA")
+    qda = QuadraticDiscriminantAnalysis()
+    qda.fit(trainingfeatures, trainingtragets, lda=False)
+    #qda.fit(trainingfeatures, trainingtragets, lda=True)        
+    proba_per_classes = qda.predict_proba(testingfeatures)
+    prediction_classes = qda.predict(testingfeatures)
+
+    plot_boundary("test1223",qda,testingfeatures, testingtargets)
+
+    #verify the model 
+    #look at max proba_per_classes and compare to the real class of the sample 
+
+
 
     
 
-    #Testing
-    testingfeatures = features[:300]
-    testingsamples = labels[:300]
-
-    # print(trainingfeatures, trainingsamples)
-    # print(trainingfeatures.shape, trainingsamples.shape)
-
-    # print(testingfeatures, testingsamples)
-    # print(testingfeatures.shape, testingsamples.shape)
-
-    clf = QuadraticDiscriminantAnalysis()
-    clf.fit(X=trainingfeatures, y=trainingsamples)
-    #what/where are the targets ??
-
-    #plot_boundary("plot_qda",fitted_estimator, X, y, mesh_step_size=0.1, title="plot_qda")
 
 
     

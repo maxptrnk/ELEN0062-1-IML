@@ -310,23 +310,22 @@ def qst_3_3():
     #QDA-DT1
     avg_accuracy_dataset1_qda = accuracy_dataset1_qda_tmp / 5 
     std_deviation_dataset1_qda = std_deviation_dataset1_qda_tmp / 5 
-    print("QDA-DT1   acc : ",avg_accuracy_dataset1_qda ,"sdt : ", std_deviation_dataset1_qda)
+    print("QDA-DT1   acc : ",round(avg_accuracy_dataset1_qda,3) ,"sdt : ", round(std_deviation_dataset1_qda,3))
 
     #QDA-DT2
     avg_accuracy_dataset2_qda = accuracy_dataset2_qda_tmp / 5 
     std_deviation_dataset2_qda = std_deviation_dataset2_qda_tmp / 5 
-    print("QDA-DT2   acc : ",avg_accuracy_dataset2_qda ,"sdt : ", std_deviation_dataset2_qda)
+    print("QDA-DT2   acc : ",round(avg_accuracy_dataset2_qda,3) ,"sdt : ", round(std_deviation_dataset2_qda,3))
 
     #LDA-DT1
-    avg_accuracy_dataset1_qda = accuracy_dataset1_qda_tmp / 5 
-    std_deviation_dataset1_qda = std_deviation_dataset1_qda_tmp / 5 
-    print("LDA-DT1   acc : ",avg_accuracy_dataset1_qda ,"sdt : ", std_deviation_dataset1_qda)
+    avg_accuracy_dataset1_lda = accuracy_dataset1_lda_tmp / 5 
+    std_deviation_dataset1_lda = std_deviation_dataset1_lda_tmp / 5 
+    print("LDA-DT1   acc : ",round(avg_accuracy_dataset1_lda,3) ,"sdt : ", round(std_deviation_dataset1_lda,3))
 
     #LDA-DT2
-    avg_accuracy_dataset2_qda = accuracy_dataset2_qda_tmp / 5 
-    std_deviation_dataset2_qda = std_deviation_dataset2_qda_tmp / 5 
-    print("LDA-DT2   acc : ",avg_accuracy_dataset1_qda ,"sdt : ", std_deviation_dataset2_qda)
-
+    avg_accuracy_dataset2_lda = accuracy_dataset2_lda_tmp / 5 
+    std_deviation_dataset2_lda = std_deviation_dataset2_lda_tmp / 5 
+    print("LDA-DT2   acc : ",round(avg_accuracy_dataset2_lda,3) ,"sdt : ", round(std_deviation_dataset2_lda,3))
 
 
 if __name__ == "__main__":

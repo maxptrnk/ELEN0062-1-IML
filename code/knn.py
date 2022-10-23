@@ -38,7 +38,7 @@ for n_neighbors in n_neighborsArray:
         kNeighbors_classifier.fit(X_training, y_training)
         test_set_accuracies[i] = kNeighbors_classifier.score(X_test, y_test)
         if (i==0):
-            plot_boundary(str(n_neighbors)+"nn_boundary", kNeighbors_classifier, X, y, mesh_step_size=0.1, title="KNeighbors decision boundary for k = " + str(n_neighbors))
+            plot_boundary(str(n_neighbors)+"nn_boundary", kNeighbors_classifier, X_test, y_test, mesh_step_size=0.1, title="KNeighbors decision boundary for k = " + str(n_neighbors))
 
     average = np.average(test_set_accuracies)
     standard_deviation = np.std(test_set_accuracies)

@@ -216,13 +216,12 @@ def test_method(trainingfeatures,trainingtragets,testingfeatures,testingtargets,
     prediction_classes = qda.predict(testingfeatures)
 
     accuracy = compute_accuracy(prediction_classes,testingtargets)
-    std_deviation = np.std(prediction_classes) # not sure about it
 
     if fname!=None:
         if fname.isstring:
             plot_boundary(fname,qda,testingfeatures, testingtargets, title=fname)
 
-    return accuracy,std_deviation
+    return accuracy
 
 
 def qst_3_2():
@@ -253,20 +252,16 @@ def qst_3_2():
 
 def qst_3_3():
     #QDA-DT1
-    accuracy_dataset1_qda_tmp = 0 
-    std_deviation_dataset1_qda_tmp = 0
+    accuracy_dataset1_qda_tmp = []
 
     #LDA-DT1
-    accuracy_dataset1_lda_tmp = 0 
-    std_deviation_dataset1_lda_tmp = 0
+    accuracy_dataset1_lda_tmp = []
 
     #QDA-DT2
-    accuracy_dataset2_qda_tmp = 0 
-    std_deviation_dataset2_qda_tmp = 0
+    accuracy_dataset2_qda_tmp = []
 
     #LDA-DT2
-    accuracy_dataset2_lda_tmp = 0 
-    std_deviation_dataset2_lda_tmp = 0
+    accuracy_dataset2_lda_tmp = []
 
 
     for generation in range(5):
@@ -286,45 +281,47 @@ def qst_3_3():
         testingfeatures1 = features1[:300]
         testingtargets1 = labels1[:300]
         
-
+        
         #QDA-DT1
-        accuracy,std_deviation = test_method(trainingfeatures1,trainingtragets1,testingfeatures1,testingtargets1, lda=False)
-        accuracy_dataset1_qda_tmp += accuracy
-        std_deviation_dataset1_qda_tmp += std_deviation
+        accuracy = test_method(trainingfeatures1,trainingtragets1,testingfeatures1,testingtargets1, lda=False)
+        accuracy_dataset1_qda_tmp.append(accuracy)
         
         #QDA-DT2
-        accuracy,std_deviation = test_method(trainingfeatures2, trainingtragets2,testingfeatures2,testingtargets2, lda=False)
-        accuracy_dataset2_qda_tmp += accuracy
-        std_deviation_dataset2_qda_tmp += std_deviation
+        accuracy = test_method(trainingfeatures2, trainingtragets2,testingfeatures2,testingtargets2, lda=False)
+        accuracy_dataset2_qda_tmp.append(accuracy)
     
         #LDA-DT1
-        accuracy,std_deviation = test_method(trainingfeatures1, trainingtragets1,testingfeatures1,testingtargets1, lda=True)
-        accuracy_dataset1_lda_tmp += accuracy
-        std_deviation_dataset1_lda_tmp += std_deviation
+        accuracy = test_method(trainingfeatures1, trainingtragets1,testingfeatures1,testingtargets1, lda=True)
+        accuracy_dataset1_lda_tmp.append(accuracy)
 
         #LDA-DT2
-        accuracy,std_deviation = test_method(trainingfeatures2, trainingtragets2,testingfeatures2,testingtargets2, lda=True)
-        accuracy_dataset2_lda_tmp += accuracy
-        std_deviation_dataset2_lda_tmp += std_deviation
+        accuracy = test_method(trainingfeatures2, trainingtragets2,testingfeatures2,testingtargets2, lda=True)
+        accuracy_dataset2_lda_tmp.append(accuracy)
+
+
+    np.array(accuracy_dataset1_qda_tmp)
+    np.array(accuracy_dataset1_lda_tmp)
+    np.array(accuracy_dataset2_qda_tmp)
+    np.array(accuracy_dataset2_lda_tmp)
 
     #QDA-DT1
-    avg_accuracy_dataset1_qda = accuracy_dataset1_qda_tmp / 5 
-    std_deviation_dataset1_qda = std_deviation_dataset1_qda_tmp / 5 
+    avg_accuracy_dataset1_qda = np.mean(accuracy_dataset1_qda_tmp) 
+    std_deviation_dataset1_qda = np.std(accuracy_dataset1_qda_tmp)
     print("QDA-DT1   acc : ",round(avg_accuracy_dataset1_qda,3) ,"sdt : ", round(std_deviation_dataset1_qda,3))
 
     #QDA-DT2
-    avg_accuracy_dataset2_qda = accuracy_dataset2_qda_tmp / 5 
-    std_deviation_dataset2_qda = std_deviation_dataset2_qda_tmp / 5 
+    avg_accuracy_dataset2_qda =  np.mean(accuracy_dataset2_qda_tmp) 
+    std_deviation_dataset2_qda = np.std(accuracy_dataset2_qda_tmp)
     print("QDA-DT2   acc : ",round(avg_accuracy_dataset2_qda,3) ,"sdt : ", round(std_deviation_dataset2_qda,3))
 
     #LDA-DT1
-    avg_accuracy_dataset1_lda = accuracy_dataset1_lda_tmp / 5 
-    std_deviation_dataset1_lda = std_deviation_dataset1_lda_tmp / 5 
+    avg_accuracy_dataset1_lda =  np.mean(accuracy_dataset1_lda_tmp) 
+    std_deviation_dataset1_lda = np.std(accuracy_dataset1_lda_tmp)
     print("LDA-DT1   acc : ",round(avg_accuracy_dataset1_lda,3) ,"sdt : ", round(std_deviation_dataset1_lda,3))
 
     #LDA-DT2
-    avg_accuracy_dataset2_lda = accuracy_dataset2_lda_tmp / 5 
-    std_deviation_dataset2_lda = std_deviation_dataset2_lda_tmp / 5 
+    avg_accuracy_dataset2_lda =  np.mean(accuracy_dataset2_lda_tmp) 
+    std_deviation_dataset2_lda = np.std(accuracy_dataset2_lda_tmp)
     print("LDA-DT2   acc : ",round(avg_accuracy_dataset2_lda,3) ,"sdt : ", round(std_deviation_dataset2_lda,3))
 
 

@@ -9,44 +9,41 @@ Project 1 - Classification algorithms
 import numpy as np
 from matplotlib import pyplot as plt
 
-from data import make_dataset1, make_dataset2
+from data import make_dataset2
 from plot import plot_boundary
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
- 
-datasets = [make_dataset1, make_dataset2]
+
+dataset = make_dataset2
 number_of_samples = 1500
 training_sets = 1200
 max_depth = [1, 2, 4, 8, None]
 number_generations = 5
 
 if __name__ == "__main__":
-# 1.1 Plots to see how decision boudary is affected by complexity
-    for i in range(len(datasets)):
-        #generate dataset
-        X, y = datasets[i](number_of_samples, random_state = 0)
-        X_train, X_test, y_train, y_test = train_test_split(X, y,train_size = training_sets,shuffle = False)
-        for j in range(len(max_depth)):
-            # Decision Tree classifier
-            dtc = DecisionTreeClassifier(max_depth = max_depth[j])
+    # 1.1 Plots to see how decision boudary is affected by complexity
+    X, y = dataset(number_of_samples, random_state = 0)
+    X_train, X_test, y_train, y_test = train_test_split(X, y,train_size = training_sets,shuffle = False)
+
+    for j in range(len(max_depth)):
+        # Decision Tree classifier
+        dtc = DecisionTreeClassifier(max_depth = max_depth[j])
+        dtc.fit(X_train, y_train)
+        # printing the Plot
+        plot_boundary( "plot\make_dataset2" + "_max_depth" + str(max_depth[j]),dtc, X_test[0:training_sets],y_test[0:training_sets],title = "max_depth : " + str(max_depth[j]))
+    # 1.2  
+    print("max_depth", "mean", "std")
+    for i in range(len(max_depth)):
+        accr = np.empty(number_generations)
+        for k in range(number_generations):
+            # Data set
+            X, y = dataset(number_of_samples, random_state = k)
+            X_train, X_test, y_train, y_test = train_test_split(X, y,train_size = training_sets,shuffle = False)
+
+            dtc = DecisionTreeClassifier(max_depth = max_depth[i])
             dtc.fit(X_train, y_train)
-            # Plot
-            plot_boundary( "plot\make_dataset" + str(i + 1) + "max_depth" + str(max_depth[j]),dtc, X_test[0:training_sets],y_test[0:training_sets],title = "max_depth : " + str(max_depth[j]))
-    # 1.2 
-    print("make_data", "max_depth", "mean", "std")
-    for i in range(len(datasets)):
-        for j in range(len(max_depth)):
-            accr = np.empty(number_generations)
-            for k in range(number_generations):
-                # Data set
-                X, y = datasets[i](number_of_samples, random_state = k)
-                X_train, X_test, y_train, y_test = train_test_split(X, y,train_size = training_sets,shuffle = False)
-                
-                dtc = DecisionTreeClassifier(max_depth = max_depth[j])
-                dtc.fit(X_train, y_train)
-                # Score 
-                accr[k] = dtc.score(X_test, y_test)
-            print(i + 1, max_depth[j],"{:.5f}".format(np.mean(accr)), "{:.5f}".format(np.std(accr)))
+            accr[k] = dtc.score(X_test, y_test)
+        print(max_depth[i],"{:.5f}".format(np.mean(accr)), "{:.5f}".format(np.std(accr)))
 # (Question 1)
 
 # Put your funtions here
